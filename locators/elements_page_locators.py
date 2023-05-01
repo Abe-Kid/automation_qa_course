@@ -58,6 +58,14 @@ class WebTablePageLocators:
 
     #update
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
+class ButtonsPageLocators:
+    DOUBLE_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
+    DYNAMIC_CLICK_BUTTON = (By.XPATH, "//button[text()='Click Me']")
+    DOUBLE_CLICK_MESSAGE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
+    RIGHT_CLICK_MESSAGE = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
+    DYNAMIC_CLICK_MESSAGE = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
+    ALL_CLICKED_BUTTONS_MESSAGE = (By.CSS_SELECTOR, "p[id]")
 
 
 

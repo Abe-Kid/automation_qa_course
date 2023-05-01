@@ -1,7 +1,7 @@
 import random
 import time
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage
 
 
 class TestElements:
@@ -63,20 +63,15 @@ class TestElements:
             web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
             web_table_page.open()
             last_name = web_table_page.add_new_person()[1]
-            time.sleep(3)
             web_table_page.search_some_person(last_name)
             age = web_table_page.update_person_info()
-            time.sleep(5)
             row = web_table_page.check_search_person()
-            print(age)
-            print(row)
             assert age in row, "the person's card has not been changed"
 
         def test_web_table_delete_person(self, driver):
             web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
             web_table_page.open()
             email = web_table_page.add_new_person()[3]
-            time.sleep(3)
             web_table_page.search_some_person(email)
             web_table_page.delete_person_info()
             text = web_table_page.check_deleted_person()
@@ -88,3 +83,25 @@ class TestElements:
             count = web_table_page.select_up_to_some_rows()
             assert count == [5, 10, 20, 25, 50, 100], 'The number of rows in the table has not been changed or has ' \
                                                       'changed incorrectly'
+
+    class TestButtonsPage:
+        def test_double_click_button(self, driver):
+            buttons_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            buttons_page.open()
+            click_button = buttons_page.double_click_button()
+            clicked_message = buttons_page.get_clicked_buttons()
+            assert click_button == clicked_message
+
+        def test_right_click_button(self, driver):
+            buttons_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            buttons_page.open()
+            click_button = buttons_page.right_click_button()
+            clicked_message = buttons_page.get_clicked_buttons()
+            assert click_button == clicked_message
+
+        def test_dynamic_button(self, driver):
+            buttons_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            buttons_page.open()
+            click_button = buttons_page.dynamic_click_button()
+            clicked_message = buttons_page.get_clicked_buttons()
+            assert click_button == clicked_message
