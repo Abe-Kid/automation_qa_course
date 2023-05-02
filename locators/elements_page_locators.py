@@ -67,5 +67,12 @@ class ButtonsPageLocators:
     DYNAMIC_CLICK_MESSAGE = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
     ALL_CLICKED_BUTTONS_MESSAGE = (By.CSS_SELECTOR, "p[id]")
 
+class LinksPageLocators:
+    SIMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
+    BAD_REQUEST = (By.CSS_SELECTOR, "a[id='bad-request']")
+
+
+
+
 
 

@@ -1,7 +1,7 @@
 import random
 import time
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage, LinksPage
 
 
 class TestElements:
@@ -90,18 +90,33 @@ class TestElements:
             buttons_page.open()
             click_button = buttons_page.double_click_button()
             clicked_message = buttons_page.get_clicked_buttons()
-            assert click_button == clicked_message
+            assert click_button == clicked_message, "You have not done a double click"
 
         def test_right_click_button(self, driver):
             buttons_page = ButtonsPage(driver, "https://demoqa.com/buttons")
             buttons_page.open()
             click_button = buttons_page.right_click_button()
             clicked_message = buttons_page.get_clicked_buttons()
-            assert click_button == clicked_message
+            assert click_button == clicked_message, "You have done a right click"
 
         def test_dynamic_button(self, driver):
             buttons_page = ButtonsPage(driver, "https://demoqa.com/buttons")
             buttons_page.open()
             click_button = buttons_page.dynamic_click_button()
             clicked_message = buttons_page.get_clicked_buttons()
-            assert click_button == clicked_message
+            assert click_button == clicked_message, "You have done a dynamic click"
+
+    class TestLinksPage:
+        def test_check_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            href_link, current_url = links_page.check_new_tab_simple_link()
+            assert href_link == current_url, "the link is briken or url is incorrect"
+
+        def test_broken_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            response_code = links_page.check_broken_link("https://demoqa.com/bad-request")
+            assert response_code == 400, "the link works or the status code is not 400"
+
+
