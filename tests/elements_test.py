@@ -1,6 +1,5 @@
-import random
 import time
-
+import random
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage, LinksPage
 
 
@@ -107,16 +106,66 @@ class TestElements:
             assert click_button == clicked_message, "You have done a dynamic click"
 
     class TestLinksPage:
-        def test_check_link(self, driver):
+
+        def test_home_simple_link(self, driver):
             links_page = LinksPage(driver, "https://demoqa.com/links")
             links_page.open()
-            href_link, current_url = links_page.check_new_tab_simple_link()
-            assert href_link == current_url, "the link is briken or url is incorrect"
+            link_href, current_url, status_code = links_page.check_home_simple_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL {link_href} is redirecting to {current_url} URL. Status code = {status_code}"
 
-        def test_broken_link(self, driver):
+        def test_home_dynamic_link(self, driver):
             links_page = LinksPage(driver, "https://demoqa.com/links")
             links_page.open()
-            response_code = links_page.check_broken_link("https://demoqa.com/bad-request")
-            assert response_code == 400, "the link works or the status code is not 400"
+            link_href, current_url, status_code = links_page.check_home_dynamic_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
 
+        def test_created_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_created_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
 
+        def test_no_content_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_no_content_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
+
+        def test_moved_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_moved_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
+
+        def test_bad_request_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_bad_request_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
+
+        def test_unauthorized_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_unauthorized_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
+
+        def test_forbidden_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_forbidden_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"
+
+        def test_not_found_link(self, driver):
+            links_page = LinksPage(driver, "https://demoqa.com/links")
+            links_page.open()
+            link_href, current_url, status_code = links_page.check_not_found_link()
+            assert link_href == current_url and status_code == 200, \
+                f"This URL '{link_href}' is redirecting to '{current_url}' URL. Status code = {status_code}"

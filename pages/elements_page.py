@@ -1,13 +1,12 @@
-import random
 import time
-
+import random
 import requests
+from pages.base_page import BasePage
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-
 from generator.generator import generated_person
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
     WebTablePageLocators, ButtonsPageLocators, LinksPageLocators
-from pages.base_page import BasePage
 
 
 class TextBoxPage(BasePage):
@@ -115,6 +114,7 @@ class WebTablePage(BasePage):
         return data
 
     def search_some_person(self, key_word):
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.HOME)
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
 
     def check_search_person(self):
@@ -127,8 +127,8 @@ class WebTablePage(BasePage):
         age = person_info.age
         self.element_is_visible(self.locators.UPDATE_BUTTON).click()
         self.element_is_visible(self.locators.AGE_INPUT).clear()
+        self.element_is_visible(self.locators.AGE_INPUT).send_keys(Keys.HOME)
         self.element_is_visible(self.locators.AGE_INPUT).send_keys(age)
-        time.sleep(3)
         self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
         return str(age)
 
@@ -139,9 +139,8 @@ class WebTablePage(BasePage):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
 
     def select_up_to_some_rows(self):
-        # rows_per_page_button = self.element_is_present(self.locators.COUNT_ROW_LIST)
-        # count = [int(i) for i in rows_per_page_button.text.split() if i.isnumeric()]
-        count = [5, 10, 20, 25, 50, 100]
+        rows_per_page_button = self.element_is_present(self.locators.COUNT_ROW_LIST)
+        count = [int(i) for i in rows_per_page_button.text.split() if i.isnumeric()]
         data = []
         for x in count:
             count_row_button = self.element_is_present(self.locators.COUNT_ROW_LIST)
@@ -178,25 +177,46 @@ class ButtonsPage(BasePage):
         #     data.append(message.text)
         return clicked_buttons
 
+
 class LinksPage(BasePage):
     locators = LinksPageLocators()
 
-    def check_new_tab_simple_link(self):
-        simple_link = self.element_is_visible(self.locators.SIMPLE_LINK)
-        link_href = simple_link.get_attribute('href')
-        request = requests.get(f"{link_href}bad-request")
-        if request.status_code == 200:
-            simple_link.click()
-            self.driver.switch_to.window(self.driver.window_handles[1])
-            url = self.driver.current_url
-            return link_href, url
+    def try_follow_the_link(self, locator):
+        current_link = self.element_is_visible(locator)
+        link_href = current_link.get_attribute('href')
+        try:
+            request = requests.get(link_href)
+        except:
+            return link_href, "NOT VALID", "no_status_code"
         else:
-            return link_href, request.status_code
+            current_link.click()
+            self.switch_to_new_tab()
+            current_url = self.driver.current_url
+            return link_href, current_url, request.status_code
 
-    def check_broken_link(self, url):
-        request = requests.get(url)
-        if request.status_code == 200:
-            self.element_is_present(self.locators.BAD_REQUEST).click()
-        else:
-            return request.status_code
+    def check_home_simple_link(self):
+        return self.try_follow_the_link(self.locators.HOME_LINK)
 
+    def check_home_dynamic_link(self):
+        return self.try_follow_the_link(self.locators.HOME_DYNAMIC_LINK)
+
+    def check_created_link(self):
+        return self.try_follow_the_link(self.locators.CREATED_LINK)
+
+    def check_no_content_link(self):
+        return self.try_follow_the_link(self.locators.NO_CONTENT_LINK)
+
+    def check_moved_link(self):
+        return self.try_follow_the_link(self.locators.MOVED_LINK)
+
+    def check_bad_request_link(self):
+        return self.try_follow_the_link(self.locators.BAD_REQUEST)
+
+    def check_unauthorized_link(self):
+        return self.try_follow_the_link(self.locators.UNAUTHORIZED_LINK)
+
+    def check_forbidden_link(self):
+        return self.try_follow_the_link(self.locators.FORBIDDEN_LINK)
+
+    def check_not_found_link(self):
+        return self.try_follow_the_link(self.locators.NOT_FOUND_LINK)
